@@ -1,7 +1,7 @@
 spring:
   # Database Configuration (PostgreSQL)
   datasource:
-    url: jdbc:postgresql://localhost:5432/video_platform
+    url: jdbc:postgresql://localhost:5432/video_orchestrator_service
     username: ${POSTGRES_USER:root}
     password: ${POSTGRES_PASSWORD:root}
   
