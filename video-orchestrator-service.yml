@@ -1,0 +1,65 @@
+server:
+  port: 8083
+
+spring:
+  # Database Configuration (PostgreSQL)
+  datasource:
+    url: jdbc:postgresql://localhost:5432/video_platform
+    username: ${POSTGRES_USER:root}
+    password: ${POSTGRES_PASSWORD:root}
+  
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  # Messaging Configuration (Kafka)
+  kafka:
+    bootstrap-servers: localhost:9092,localhost:9093
+    consumer:
+      group-id: video-orchestrator-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+  # Spring Cloud Bus via Kafka
+  cloud:
+    bus:
+      enabled: true
+      destination: streaming-bus
+
+# MinIO Storage Settings
+minio:
+  url: http://localhost:9000
+  accessKey: admin
+  secretKey: password123
+  bucket:
+    raw: raw-uploads
+    public: public-streams
+
+# Monitoring & Management (Required for Cloud Bus /refresh)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,bus-refresh"
+  endpoint:
+    health:
+      show-details: always
+
+# Eureka Client Discovery
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${random.value}
