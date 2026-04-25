@@ -26,6 +26,22 @@ spring:
         binder:
           brokers: localhost:9092,localhost:9093
 
+eureka:
+  client:
+    service-url:
+      # The location of your Eureka Server
+      defaultZone: http://localhost:8761/eureka/
+    # Allow the microservice to register itself with Eureka
+    register-with-eureka: true
+    # Allow the microservice to fetch the list of other services
+    fetch-registry: true
+  instance:
+    # Use IP address instead of hostname (highly recommended for Docker/Local setups)
+    prefer-ip-address: true
+    # Unique ID for the instance in the Eureka dashboard
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+
 # --- ACTUATOR CONFIGURATION ---
 management:
   endpoints:
